@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribe to Get Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100vh;
+            background-color: white;
+            color: black;
+        }
+
+        img {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 2px solid #007BFF;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            text-align: center;
+            z-index: 1000;
+            color: black;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .popup.active {
+            display: block;
+        }
+
+        .popup button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 14px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            background: #0056b3;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            margin: 10px auto;
+            width: 40px;
+            height: 40px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #007BFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo -->
+    <img src="https://i.imghippo.com/files/kzLv2458gQ.webp" alt="Company Logo">
+
+    <!-- Heading -->
+    <h1>Subscribe to Get Your Premium Code</h1>
+
+    <!-- Subscribe Button -->
+    <button id="subscribeButton">Subscribe</button>
+
+    <!-- Loading Animation -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Verifying... Please wait</p>
+    </div>
+
+    <!-- Popup -->
+    <div id="popup" class="popup">
+        <p id="message"></p>
+        <button id="copyButton" style="display: none;">Copy Code</button>
+        <button id="closeButton">Close</button>
+    </div>
+
+    <script>
+        const subscribeButton = document.getElementById("subscribeButton");
+        const loading = document.getElementById("loading");
+        const popup = document.getElementById("popup");
+        const message = document.getElementById("message");
+        const copyButton = document.getElementById("copyButton");
+        const closeButton = document.getElementById("closeButton");
+
+        const codes = ["HFTRHNFD", "GGFUFUFT", "FGGFGFY", "GGHGTDL", "FETRHKAL"]; // Predefined codes
+        let attemptCount = parseInt(localStorage.getItem("attemptCount")) || 0; // Track attempts
+        let generatedCode = localStorage.getItem("generatedCode") || ""; // Check if code exists in localStorage
+
+        subscribeButton.addEventListener("click", () => {
+            if (attemptCount >= 2) {
+                showPopup("Task already done.");
+                copyButton.style.display = "none";
+                return;
+            }
+
+            // Open YouTube in a new tab
+            window.open("https://www.youtube.com/@trendyjiteshFF", "_blank");
+
+            // Show loading animation
+            loading.classList.add("active");
+
+            // Simulate verification process
+            setTimeout(() => {
+                loading.classList.remove("active");
+
+                attemptCount++;
+                localStorage.setItem("attemptCount", attemptCount);
+
+                if (attemptCount === 1) {
+                    showPopup("Task failed. Try again!");
+                    copyButton.style.display = "none";
+                } else if (attemptCount === 2) {
+                    generatedCode = codes[Math.floor(Math.random() * codes.length)];
+                    localStorage.setItem("generatedCode", generatedCode);
+
+                    showPopup(`Your Code: ${generatedCode}`);
+                    copyButton.style.display = "inline-block";
+                }
+            }, 5000); // Verification duration
+        });
+
+        copyButton.addEventListener("click", () => {
+            if (generatedCode) {
+                navigator.clipboard.writeText(generatedCode).then(() => {
+                    alert("Code copied to clipboard!");
+                }).catch(() => {
+                    alert("Failed to copy the code.");
+                });
+            }
+        });
+
+        closeButton.addEventListener("click", () => {
+            popup.classList.remove("active");
+        });
+
+        function showPopup(msg) {
+            popup.classList.add("active");
+            message.textContent = msg;
+        }
+    </script>
+</body>
+</html>
